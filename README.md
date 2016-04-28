@@ -1,35 +1,39 @@
-About manyuser
+shadowsocks-rm manyuser for shadowsocks-panel
 ----------------
 
 Install
 -------
 
+Debian / Ubuntu:
+
+    apt-get install python-pip python-m2crypto
+
+CentOS:
+
+    yum install m2crypto python-setuptools
+    easy_install pip
+
 install MySQL 5.x.x
 
 `pip install cymysql`
-
-create a database named `shadowsocks`
-
-import `shadowsocks.sql` into `shadowsocks`
-
-if you upgrade from old version make sure:
-
-  `pass` is varchar(32) NOT NULL,
-  `passwd` is varchar(32) NOT NULL,
-  `last_get_gift_time` not `last_get_gitf_time`
 
 
 edit config.py
 
 Example:
 
+    import logging
+    
     #Config
-    MYSQL_HOST = 'mengsky.net'
+    MYSQL_HOST = 'localhost'
     MYSQL_PORT = 3306
     MYSQL_USER = 'root'
-    MYSQL_PASS = 'root'
+    MYSQL_PASS = 'password'
     MYSQL_DB = 'shadowsocks'
-
+    
+    # Pro node 1 true , others false
+    PRO_NODE = 0
+    
     MANAGE_PASS = 'passwd'
     #if you want manage in other server you should set this value to global ip
     MANAGE_BIND_IP = '127.0.0.1'
@@ -40,6 +44,12 @@ Example:
     #if you want bind all of ipv4 if '0.0.0.0'
     #if you want bind all of if only '4.4.4.4'
     SS_BIND_IP = '0.0.0.0'
+    SS_METHOD = 'rc4-md5'
+    
+    #LOG CONFIG
+    LOG_ENABLE = False
+    LOG_LEVEL = logging.DEBUG
+    LOG_FILE = '/var/log/shadowsocks.log'
 
 
 TestRun `cd shadowsocks` ` python servers.py` not server.py
@@ -47,20 +57,20 @@ TestRun `cd shadowsocks` ` python servers.py` not server.py
 if no exception server will startup. you will see such like
 Example:
 
-    add: {"server_port": XXXXX, "password":"XXXXX"}
+    add: {"server_port": XXXXX, "password":"XXXXX", "method":"xxxxx"}
 
 
 Database user table column
 ------------------
-`passwd` server pass
+`sspwd` server pass
 
 `port` server port
 
-`t` last keepalive time
+`lastConnTime` last keepalive time
 
-`u` upload transfer
+`flow_up` upload transfer
 
-`d` download transfer (upload & download in here now)
+`flow_down` download transfer (upload & download in here now)
 
-`transfer_enable` if u + d > transfer_enable this server will be stop (db_transfer.py del_server_out_of_bound_safe)
+`transfer` if flow_up + flow_down > transfer this server will be stop (db_transfer.py del_server_out_of_bound_safe)
 
