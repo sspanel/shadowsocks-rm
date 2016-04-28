@@ -105,7 +105,7 @@ class DbTransfer(object):
         except Exception as e:
             import traceback
             traceback.print_exc()
-            logging.warn('db push_db_all_user: %s' % e)
+            logging.warn('db pull_db_all_user: %s' % e)
 
     @staticmethod
     def del_server_out_of_bound_safe(rows):
