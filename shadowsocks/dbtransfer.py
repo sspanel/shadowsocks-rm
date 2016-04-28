@@ -130,6 +130,7 @@ class DbTransfer(object):
                     DbTransfer.send_command('remove: {"server_port":%s}' % row[0])
                 if config.PRO_NODE == 1 and row[7] != 'VIP':
                 	logging.info('db stop server at port [%s] reason: not VIP plan' % (row[0]))
+                	print('db stop server at port [%s] reason: not VIP plan' % (row[0]))
                 	DbTransfer.send_command('remove: {"server_port":%s}' % row[0])
             else:
                 if row[5] == 1 and row[1] + row[2] < row[3]:
