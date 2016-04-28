@@ -70,7 +70,7 @@ class Manager(object):
         # self._loop.add_periodic(self.handle_periodic)
         port_password = config['port_password']
         del config['port_password']
-        for port, password in port_password.items():
+        for port, password, method in port_password.items():
             a_config = config.copy()
             a_config['server_port'] = int(port)
             a_config['password'] = password
@@ -109,14 +109,16 @@ class Manager(object):
         port = int(config['server_port'])
         servers = self._relays.get(port, None)
         if servers:
-            self._send_control_data(b'{"stat":"ok", "password":"%s"}' % servers[0]._config['password'])
+            self._send_control_data(b'{"stat":"ok", "password":"%s", "method":"%s"}' % (servers[0]._config['password'], servers[0]._config['method']))
         else:
             self._send_control_data(b'{"stat":"ko"}')
 
     def handle_event(self, sock, fd, event):
         if sock == self._control_socket and event == eventloop.POLL_IN:
             data, self._control_client_addr = sock.recvfrom(BUF_SIZE)
+            #print(data)
             parsed = self._parse_command(data)
+            #print(parsed)
             if parsed:
                 command, config = parsed
                 a_config = self._config.copy()
@@ -125,11 +127,16 @@ class Manager(object):
                 else:
                     if config:
                         # let the command override the configuration file
+                        #print(config)
+
                         a_config.update(config)
                     if 'server_port' not in a_config:
                         logging.error('can not find server_port in config')
                     else:
                         if command == 'add':
+                            if a_config['method'] == 'None':
+                                a_config['method'] = self._config['method']
+
                             self.add_port(a_config)
                             self._send_control_data(b'ok')
                         elif command == 'remove':
