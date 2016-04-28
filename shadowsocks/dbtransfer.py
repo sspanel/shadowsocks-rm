@@ -95,10 +95,7 @@ class DbTransfer(object):
             conn = cymysql.connect(host=config.MYSQL_HOST, port=config.MYSQL_PORT, user=config.MYSQL_USER,
                                    passwd=config.MYSQL_PASS, db=config.MYSQL_DB, charset='utf8')
             cur = conn.cursor()
-            query_sql = "SELECT port, flow_up, flow_down, transfer, sspwd, enable, method, plan FROM member "
-            if config.PRO_NODE == 1:
-                query_sql += " WHERE plan='VIP'"
-            cur.execute(query_sql)
+            cur.execute("SELECT port, flow_up, flow_down, transfer, sspwd, enable, method, plan FROM member")
             rows = []
             for r in cur.fetchall():
                 rows.append(list(r))
@@ -133,6 +130,8 @@ class DbTransfer(object):
                 	print('db stop server at port [%s] reason: not VIP plan' % (row[0]))
                 	DbTransfer.send_command('remove: {"server_port":%s}' % row[0])
             else:
+                if config.PRO_NODE == 1 and row[7] != 'VIP':
+                    continue
                 if row[5] == 1 and row[1] + row[2] < row[3]:
                     logging.info('db start server at port [%s] pass [%s]' % (row[0], row[4]))
                     if row[6] is None:
