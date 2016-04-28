@@ -128,6 +128,8 @@ class DbTransfer(object):
             else:
                 if row[5] == 1 and row[1] + row[2] < row[3]:
                     logging.info('db start server at port [%s] pass [%s]' % (row[0], row[4]))
+                    if row[6] is None:
+                    	row[6] = config.SS_METHOD
                     DbTransfer.send_command('add: {"server_port": %s, "password":"%s", "method":"%s"}'% (row[0], row[4], row[6]))
                     print('add: {"server_port": %s, "password":"%s", "method":"%s"}'% (row[0], row[4], row[6]))
 
