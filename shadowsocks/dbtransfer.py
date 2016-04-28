@@ -95,7 +95,10 @@ class DbTransfer(object):
             conn = cymysql.connect(host=config.MYSQL_HOST, port=config.MYSQL_PORT, user=config.MYSQL_USER,
                                    passwd=config.MYSQL_PASS, db=config.MYSQL_DB, charset='utf8')
             cur = conn.cursor()
-            cur.execute("SELECT port, flow_up, flow_down, transfer, sspwd, enable, method FROM member")
+            query_sql = "SELECT port, flow_up, flow_down, transfer, sspwd, enable, method, plan FROM member "
+            if config.PRO_NODE == '1':
+                query_sql += " WHERE plan='VIP'"
+            cur.execute(query_sql)
             rows = []
             for r in cur.fetchall():
                 rows.append(list(r))
