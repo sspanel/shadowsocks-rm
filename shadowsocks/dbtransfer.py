@@ -96,7 +96,7 @@ class DbTransfer(object):
                                    passwd=config.MYSQL_PASS, db=config.MYSQL_DB, charset='utf8')
             cur = conn.cursor()
             query_sql = "SELECT port, flow_up, flow_down, transfer, sspwd, enable, method, plan FROM member "
-            if config.PRO_NODE == '1':
+            if config.PRO_NODE == 1:
                 query_sql += " WHERE plan='VIP'"
             cur.execute(query_sql)
             rows = []
