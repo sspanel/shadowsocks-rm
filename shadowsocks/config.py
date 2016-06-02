@@ -8,7 +8,7 @@ MYSQL_PASS = 'root'
 MYSQL_DB = 'shadowsocks'
 
 # Pro node 1 true , others false
-PRO_NODE = 0
+PRO_NODE = 1
 
 MANAGE_PASS = 'passwd'
 #if you want manage in other server you should set this value to global ip
